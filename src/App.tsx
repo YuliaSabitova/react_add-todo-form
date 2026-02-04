@@ -28,8 +28,6 @@ export const App: React.FC = () => {
   const [userId, setUserId] = useState(0);
   const [hasUserIdError, setHasUserIdError] = useState(false);
 
-  const [isCompleted, setIsCompleted] = useState(false);
-
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
     setHasTitleError(false);
@@ -48,19 +46,18 @@ export const App: React.FC = () => {
       return;
     }
 
-    const maxId = todos.length > 0 ? Math.max(...todos.map(t => t.id)) : 0;
+    const maxId = todos.length > 0 ? Math.max(...todos.map(todo => todo.id)) : 0;
 
     addTodos({
       title,
       userId,
       id: maxId + 1,
-      completed: isCompleted,
+      completed: false,
       user: getUserById(userId),
     });
 
     setTitle('');
     setUserId(0);
-    setIsCompleted(false);
   };
 
   return (
@@ -68,8 +65,6 @@ export const App: React.FC = () => {
       <h1>Add todo form</h1>
 
       <form
-        action="/api/todos"
-        method="POST"
         className="box"
         onSubmit={handleSubmit}
       >
@@ -77,7 +72,7 @@ export const App: React.FC = () => {
           <label className="label" htmlFor="todo-title">
             Title:
             <input
-              id='todo-title'
+              id="todo-title"
               type="text"
               data-cy="titleInput"
               placeholder="Enter a title"
@@ -106,9 +101,9 @@ export const App: React.FC = () => {
               <option value="0" disabled>
                 Choose a user
               </option>
-              {usersFromServer.map(u => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
+              {usersFromServer.map(user => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
                 </option>
               ))}
             </select>
